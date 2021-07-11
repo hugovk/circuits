@@ -33,7 +33,7 @@ class Protocol(Component):
                 self.__buffer = packet
 
     @handler(channel='node_result', priority=100)
-    def result_handler(self, event, *args, **kwargs):
+    async def result_handler(self, event, *args, **kwargs):
         if event.name.endswith('_success'):
             source_event = args[0]
 

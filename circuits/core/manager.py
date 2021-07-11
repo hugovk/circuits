@@ -14,7 +14,7 @@ from sys import exc_info as _exc_info, stderr
 from threading import RLock, Thread, current_thread
 from time import time
 from traceback import format_exc
-from types import GeneratorType
+from types import AsyncGeneratorType, CoroutineType
 from uuid import uuid4 as uuid
 
 from ..six import Iterator, create_bound_method, next
@@ -509,7 +509,7 @@ class Manager(object):
         if g in self.root._tasks:
             self.root._tasks.remove(g)
 
-    def waitEvent(self, event, *channels, **kwargs):  # noqa
+    async def waitEvent(self, event, *channels, **kwargs):  # noqa
         # XXX: C901: This has a high McCabe complexity score of 16.
         # TODO: Refactor this method.
 
@@ -574,7 +574,7 @@ class Manager(object):
 
     wait = waitEvent
 
-    def callEvent(self, event, *channels, **kwargs):
+    async def callEvent(self, event, *channels, **kwargs):
         """
         Fire the given event to the specified channels and suspend
         execution until it has been dispatched. This method may only
@@ -585,9 +585,9 @@ class Manager(object):
         been dispatched (see :func:`circuits.core.handlers.handler`).
         """
         value = self.fire(event, *channels)
-        for r in self.waitEvent(event, *event.channels, **kwargs):
-            yield r
-        yield CallValue(value)
+        async for r in self.waitEvent(event, *event.channels, **kwargs):
+            await r  # pass ?
+        return CallValue(value)
 
     call = callEvent
 
@@ -681,7 +681,7 @@ class Manager(object):
                 self.stop()
             except SystemExit as e:
                 self.stop(e.code)
-            except BaseException:
+            except BaseException:  # FIXME: cannot happen anymore with coroutines  # FIXME: looks like code duplication with what happens in processTask()
                 value = err = _exc_info()
                 event.value.errors = True
 
@@ -694,7 +694,8 @@ class Manager(object):
                 self.fire(exception(*err, handler=event_handler, fevent=event))
 
             if value is not None:
-                if isinstance(value, GeneratorType):
+                if isinstance(value, (CoroutineType, AsyncGeneratorType)):
+                    print('###', repr(value))
                     event.waitingHandlers += 1
                     event.value.promise = True
                     self.registerTask((event, value, None))
@@ -829,20 +830,23 @@ class Manager(object):
 
         value = None
         try:
-            value = next(task)
+            value = task.send(None)
             if isinstance(value, CallValue):
                 # Done here, next() will StopIteration anyway
                 self.unregisterTask((event, task, parent))
                 # We are in a callEvent
                 value = parent.send(value.value)
-                if isinstance(value, GeneratorType):
+                if isinstance(value, (CoroutineType, AsyncGeneratorType)):
                     # We loose a yield but we gain one,
                     # we don't need to change
                     # event.waitingHandlers
                     # The below code is delegated to handlers
                     # in the waitEvent generator
                     # self.registerTask((event, value, parent))
-                    task_state = next(value)
+                    if isinstance(value, AsyncGeneratorType):
+                        task_state = value.asend(None).send(None)
+                    else:
+                        task_state = value.send(None)
                     task_state.task_event = event
                     task_state.task = value
                     task_state.parent = parent
@@ -851,11 +855,14 @@ class Manager(object):
                     if value is not None:
                         event.value.value = value
                     self.registerTask((event, parent, None))
-            elif isinstance(value, GeneratorType):
+            elif isinstance(value, (CoroutineType, AsyncGeneratorType)):
                 event.waitingHandlers += 1
                 self.unregisterTask((event, task, None))
                 # First yielded value is always the task state
-                task_state = next(value)
+                if isinstance(value, AsyncGeneratorType):
+                    task_state = value.asend(None).send(None)
+                else:
+                    task_state = value.send(None)
                 task_state.task_event = event
                 task_state.task = value
                 task_state.parent = task
@@ -868,7 +875,9 @@ class Manager(object):
                 if parent:
                     value = parent.throw(value.extract())
                     if value is not None:
-                        value_generator = (val for val in (value,))
+                        async def value_generator():
+                            return value  # yield?
+                        # value_generator = (val for val in (value,))
                         self.registerTask((event, value_generator, parent))
                 else:
                     raise value.extract()
@@ -879,7 +888,7 @@ class Manager(object):
                     self.unregisterTask((event, task, parent))
             elif value is not None:
                 event.value.value = value
-        except StopIteration:
+        except (StopAsyncIteration, StopIteration):
             event.waitingHandlers -= 1
             self.unregisterTask((event, task, parent))
 

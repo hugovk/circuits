@@ -136,6 +136,6 @@ class Daemon(Component):
             self.fire(daemonize())
 
     @handler("started", priority=100.0, channel="*")
-    def on_started(self, component):
+    async def on_started(self, component):
         if component is not self:
             self.fire(daemonize())

@@ -38,7 +38,7 @@ def handler(*names, **kwargs):
     Normally, the results returned by the handlers for an event are simply
     collected in the :class:`circuits.core.events.Event`'s :attr:`value`
     attribute. As a special case, a handler may return a
-    :class:`types.GeneratorType`. This signals to the dispatcher that the
+    :class:`types.AsyncGeneratorType`. This signals to the dispatcher that the
     handler isn't ready to deliver a result yet.
     Rather, it has interrupted it's execution with a ``yield None``
     statement, thus preserving its current execution state.
