@@ -43,15 +43,15 @@ class WebSocketsDispatcher(BaseComponent):
 
         super(WebSocketsDispatcher, self).__init__(*args, **kwargs)
 
-        self._sessions = {}
+        self._requests = {}
         self._path = path
         self._wschannel = wschannel
         self._codecs = {}
 
         @handler("read", channel=wschannel, priority=100)
         def _on_read_handler(self, event, socket, data):
-            if socket in self._sessions:
-                event.kwargs["session"] = self._sessions[socket]
+            if socket in self._requests:
+                event.kwargs["request"] = self._requests[socket]
         self.addHandler(_on_read_handler)
 
     @handler("request", priority=0.2)
@@ -108,8 +108,8 @@ class WebSocketsDispatcher(BaseComponent):
         response = e.args[0]
         request = response.request
         if request.sock in self._codecs:
-            self._sessions[request.sock] = request.session
-            kwargs = {'session': request.session}
+            self._requests[request.sock] = request
+            kwargs = {'request': request}
             self.fire(
                 connect(
                     request.sock,
@@ -122,6 +122,6 @@ class WebSocketsDispatcher(BaseComponent):
     @handler("disconnect")
     def _on_disconnect(self, sock):
         if sock in self._codecs:
-            self.fire(disconnect(sock, session=self._sessions.get(sock)), self._wschannel)
+            self.fire(disconnect(sock, request=self._requests.get(sock)), self._wschannel)
             del self._codecs[sock]
-            self._sessions.pop(sock, None)
+            self._requests.pop(sock, None)
