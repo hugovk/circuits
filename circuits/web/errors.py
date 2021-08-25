@@ -7,7 +7,7 @@ import traceback
 
 from circuits import Event
 
-from ..six import string_types
+from .six import string_types
 from .constants import (
     DEFAULT_ERROR_MESSAGE, HTTP_STATUS_CODES, POWERED_BY, SERVER_URL,
     SERVER_VERSION,

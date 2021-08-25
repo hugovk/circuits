@@ -8,7 +8,7 @@ Pipe is used as the socket transport between two sides of a Bridge
 """
 import traceback
 
-from ..six import b
+from .six import b
 from .components import BaseComponent
 from .events import Event, exception
 from .handlers import handler

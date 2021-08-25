@@ -1,7 +1,7 @@
 """
 This defines the Value object used by components and events.
 """
-from ..six import PY2, python_2_unicode_compatible, string_types, text_type
+from .six import PY2, python_2_unicode_compatible, string_types, text_type
 from .events import Event
 
 
