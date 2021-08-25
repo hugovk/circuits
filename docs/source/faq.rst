@@ -42,7 +42,7 @@ General
 ... What platforms does circuits support?
    circuits currently supports Linux, FreeBSD, OSX and Windows and is
    currently continually tested against Linux and Windows against Python
-   versions 2.7, 3.4, 3.5 and 3.6
+   versions 3.5
 
 ... Can circuits be used for concurrent or distributed programming?
    Yes. We also have plans to build more distributed components into circuits
