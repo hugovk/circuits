@@ -1,7 +1,7 @@
 import re
 from cgi import parse_header
 
-from circuits.six import PY3
+from six import PY3
 
 from .headers import HeaderElement
 from .parsers import MultipartParser, QueryStringParser
@@ -38,8 +38,7 @@ def process_multipart(request, params):
 def process_urlencoded(request, params, encoding="utf-8"):
     params.update(QueryStringParser(request.qs).result)
     body = request.body.getvalue()
-    if PY3:
-        body = body.decode(encoding)
+    body = body.decode(encoding)
     result = QueryStringParser(body).result
     for key, value in result.items():
         params[_decode_value(key, encoding)] = _decode_value(value, encoding)

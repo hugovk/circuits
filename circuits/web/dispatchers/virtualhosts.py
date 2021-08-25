@@ -4,7 +4,7 @@ This module implements a virtual host dispatcher that sends requests
 for configured virtual hosts to different dispatchers.
 """
 from circuits import BaseComponent, handler
-from circuits.six.moves.urllib_parse import urljoin
+from six.moves.urllib_parse import urljoin
 
 
 class VirtualHosts(BaseComponent):

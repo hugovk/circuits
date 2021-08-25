@@ -40,8 +40,8 @@ import re
 from tempfile import TemporaryFile
 from wsgiref.headers import Headers
 
-from circuits.six import text_type
-from circuits.six.moves.urllib_parse import parse_qs
+from six import text_type
+from six.moves.urllib_parse import parse_qs
 
 try:
     from io import BytesIO
@@ -114,7 +114,7 @@ class MultiDict(MutableMapping):
 
 
 def tob(data, enc='utf8'):  # Convert strings to bytes (py2 and py3)
-    return data.encode(enc) if isinstance(data, text_type) else data
+    return data.encode(enc) if isinstance(data, str) else data
 
 
 def copy_file(stream, target, maxread=-1, buffer_size=2 * 16):

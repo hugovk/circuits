@@ -7,8 +7,8 @@
 import re
 import zlib
 
-from circuits.six import MAXSIZE, PY3, b
-from circuits.six.moves.urllib_parse import urlsplit
+from six import MAXSIZE, PY3, b
+from six.moves.urllib_parse import urlsplit
 
 from ..headers import Headers
 
@@ -102,7 +102,7 @@ class HttpParser:
 
     def recv_body(self):
         """ return last chunk of the parsed body"""
-        body = b("").join(self._body)
+        body = b"".join(self._body)
         self._body = []
         self._partial_body = False
         return body
@@ -111,7 +111,7 @@ class HttpParser:
         """ Receive the last chunk of the parsed body and store the data
         in a buffer rather than creating a new string. """
         length = len(barray)
-        body = b("").join(self._body)
+        body = b"".join(self._body)
         m = min(len(body), length)
         data, rest = body[:m], body[m:]
         barray[0:m] = data
@@ -170,20 +170,19 @@ class HttpParser:
         nb_parsed = 0
         while True:
             if not self.__on_firstline:
-                idx = data.find(b("\r\n"))
+                idx = data.find(b"\r\n")
                 if idx < 0:
                     self._buf.append(data)
                     return len(data)
                 else:
                     self.__on_firstline = True
                     self._buf.append(data[:idx])
-                    first_line = b("").join(self._buf)
-                    if PY3:
-                        first_line = str(first_line, 'unicode_escape')
+                    first_line = b"".join(self._buf)
+                    first_line = str(first_line, 'unicode_escape')
                     nb_parsed = nb_parsed + idx + 2
 
                     rest = data[idx + 2:]
-                    data = b("")
+                    data = b""
                     if self._parse_firstline(first_line):
                         self._buf = [rest]
                     else:
@@ -191,10 +190,10 @@ class HttpParser:
             elif not self.__on_headers_complete:
                 if data:
                     self._buf.append(data)
-                    data = b("")
+                    data = b""
 
                 try:
-                    to_parse = b("").join(self._buf)
+                    to_parse = b"".join(self._buf)
                     ret = self._parse_headers(to_parse)
 
                     if ret is False:
@@ -210,7 +209,7 @@ class HttpParser:
 
                 if data:
                     self._buf.append(data)
-                    data = b("")
+                    data = b""
 
                 ret = self._parse_body()
                 if ret is None:
@@ -305,9 +304,9 @@ class HttpParser:
             self.__on_headers_complete = True
             self._buf = []
             return 0
-        idx = data.find(b("\r\n\r\n"))
+        idx = data.find(b"\r\n\r\n")
         if idx < 0:  # we don't have all headers
-            if self._status_code == 204 and data == b("\r\n"):
+            if self._status_code == 204 and data == b"\r\n":
                 self._buf = []
                 self.__on_headers_complete = True
                 return 0
@@ -316,7 +315,7 @@ class HttpParser:
 
         # Split lines on \r\n keeping the \r\n on each line
         lines = [(str(line, 'unicode_escape') if PY3 else line) + "\r\n"
-                 for line in data[:idx].split(b("\r\n"))]
+                 for line in data[:idx].split(b"\r\n")]
 
         # Parse headers into key/value pairs paying attention
         # to continuation lines.
@@ -383,7 +382,7 @@ class HttpParser:
             self.__on_message_complete = True
             return
         elif not self._chunked:
-            body_part = b("").join(self._buf)
+            body_part = b"".join(self._buf)
             if not body_part and self._clen is None:
                 if not self._status:  # message complete only for servers
                     self.__on_message_complete = True
@@ -410,7 +409,7 @@ class HttpParser:
                 self.__on_message_complete = True
             return
         else:
-            data = b("").join(self._buf)
+            data = b"".join(self._buf)
             try:
 
                 size, rest = self._parse_chunk_size(data)
@@ -442,11 +441,11 @@ class HttpParser:
             return len(rest)
 
     def _parse_chunk_size(self, data):
-        idx = data.find(b("\r\n"))
+        idx = data.find(b"\r\n")
         if idx < 0:
             return None, None
         line, rest_chunk = data[:idx], data[idx + 2:]
-        chunk_size = line.split(b(";"), 1)[0].strip()
+        chunk_size = line.split(b";", 1)[0].strip()
         try:
             chunk_size = int(chunk_size, 16)
         except ValueError:
@@ -458,7 +457,7 @@ class HttpParser:
         return chunk_size, rest_chunk
 
     def _parse_trailers(self, data):
-        idx = data.find(b("\r\n\r\n"))
+        idx = data.find(b"\r\n\r\n")
 
-        if data[:2] == b("\r\n"):
+        if data[:2] == b"\r\n":
             self._trailers = self._parse_headers(data[:idx])

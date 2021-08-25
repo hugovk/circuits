@@ -11,7 +11,7 @@ except ImportError:
     from cgi import escape
 
 from circuits import BaseComponent, handler
-from circuits.six.moves.urllib_parse import quote, unquote
+from six.moves.urllib_parse import quote, unquote
 from circuits.web.tools import serve_file
 
 DEFAULT_DIRECTORY_INDEX_TEMPLATE = """

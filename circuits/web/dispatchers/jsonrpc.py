@@ -4,7 +4,7 @@ This module implements a JSON RPC dispatcher that translates incoming
 RPC calls over JSON into RPC events.
 """
 from circuits import BaseComponent, Event, handler
-from circuits.six import binary_type
+from six import binary_type
 from circuits.tools import tryimport
 
 json = tryimport(("json", "simplejson"))
@@ -43,7 +43,7 @@ class JSONRPC(BaseComponent):
             if isinstance(params, dict):
                 params = {str(k): v for k, v in params.iteritems()}
 
-            method = str(method) if not isinstance(method, binary_type) else method
+            method = str(method) if not isinstance(method, bytes) else method
 
             if isinstance(params, dict):
                 value = yield self.call(rpc.create(method, **params), self.rpc_channel)

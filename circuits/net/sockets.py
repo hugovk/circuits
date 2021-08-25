@@ -21,7 +21,7 @@ from _socket import socket as SocketType
 from circuits.core import BaseComponent, handler
 from circuits.core.pollers import BasePoller, Poller
 from circuits.core.utils import findcmp
-from circuits.six import binary_type
+from six import binary_type
 
 from .events import (
     close, closed, connect, connected, disconnect, disconnected, error, read,
@@ -146,7 +146,7 @@ class Client(BaseComponent):
 
     @handler("read_value_changed")
     def _on_read_value_changed(self, value):
-        if isinstance(value, binary_type):
+        if isinstance(value, bytes):
             self.fire(write(value))
 
     @handler("prepare_unregister", channel="*")
@@ -486,7 +486,7 @@ class Server(BaseComponent):
 
     @handler("read_value_changed")
     def _on_read_value_changed(self, value):
-        if isinstance(value.value, binary_type):
+        if isinstance(value.value, bytes):
             sock = value.event.args[0]
             self.fire(write(sock, value.value))
 

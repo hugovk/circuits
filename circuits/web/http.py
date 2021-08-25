@@ -9,8 +9,8 @@ from socket import socket
 from circuits.core import BaseComponent, Value, handler
 from circuits.net.events import close, write
 from circuits.net.utils import is_ssl_handshake
-from circuits.six import text_type
-from circuits.six.moves.urllib_parse import quote
+from six import text_type
+from six.moves.urllib_parse import quote
 
 from . import wrappers
 from .constants import SERVER_PROTOCOL, SERVER_VERSION
@@ -97,7 +97,7 @@ class HTTP(BaseComponent):
         sock = res.request.sock
 
         if data is not None:
-            if isinstance(data, text_type):
+            if isinstance(data, str):
                 data = data.encode(self._encoding)
 
             if res.chunked:
@@ -166,7 +166,7 @@ class HTTP(BaseComponent):
 
             if isinstance(res.body, bytes):
                 body = res.body
-            elif isinstance(res.body, text_type):
+            elif isinstance(res.body, str):
                 body = res.body.encode(self._encoding)
             else:
                 parts = (

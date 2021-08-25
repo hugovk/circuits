@@ -11,7 +11,7 @@ from circuits.net.events import close, connect, write
 from circuits.net.sockets import TCPClient
 from circuits.protocols.http import HTTP
 from circuits.protocols.websocket import WebSocketCodec
-from circuits.six.moves.urllib_parse import urlparse
+from six.moves.urllib_parse import urlparse
 from circuits.web.client import NotConnected
 from circuits.web.headers import Headers
 

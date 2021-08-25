@@ -7,7 +7,7 @@ from collections import deque
 from circuits.core import Component, Event, handler
 from circuits.core.pollers import BasePoller, Poller
 from circuits.core.utils import findcmp
-from circuits.six import binary_type
+from six import binary_type
 from circuits.tools import tryimport
 
 from .events import close, closed, error, opened, read, ready
@@ -118,7 +118,7 @@ class Serial(Component):
                 data = self._serial.readline(self._bufsize)
             else:
                 data = self._serial.read(self._bufsize)
-            if not isinstance(data, binary_type):
+            if not isinstance(data, bytes):
                 data = data.encode(self._encoding)
 
             if data:
@@ -129,7 +129,7 @@ class Serial(Component):
 
     def _write(self, data):
         try:
-            if not isinstance(data, binary_type):
+            if not isinstance(data, bytes):
                 data = data.encode(self._encoding)
 
             try:

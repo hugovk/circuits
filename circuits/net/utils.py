@@ -1,6 +1,6 @@
 """Utilities"""
 
-from circuits.six import iterbytes
+from six import iterbytes
 
 
 def is_ssl_handshake(buf):
@@ -12,6 +12,6 @@ def is_ssl_handshake(buf):
         return True
 
     # SSLv2
-    v = list(iterbytes(buf[:2])) + [0x00, 0x00]
+    v = list(iter(buf[:2])) + [0x00, 0x00]
     if (v[0] & 0x80 == 0x80) and ((v[0] & 0x7f) << 8 | v[1]) > 9:
         return True

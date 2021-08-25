@@ -7,7 +7,7 @@ import inspect as _inspect
 from functools import wraps
 from warnings import warn, warn_explicit
 
-from circuits.six import _func_code
+from six import _func_code
 
 
 def tryimport(modules, obj=None, message=None):

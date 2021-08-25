@@ -1,7 +1,7 @@
 """Internet Relay Chat message"""
 
 
-from circuits.six import PY3, string_types, text_type, u
+from six import PY3, string_types, text_type, u
 
 from .utils import parsemsg
 
@@ -14,17 +14,17 @@ class Message:
 
     def __init__(self, command, *args, **kwargs):
         self.command = command
-        self.prefix = text_type(kwargs["prefix"]) if "prefix" in kwargs else None
+        self.prefix = str(kwargs["prefix"]) if "prefix" in kwargs else None
 
         self.encoding = kwargs.get("encoding", "utf-8")
         self.add_nick = kwargs.get("add_nick", False)
-        self.args = [arg if isinstance(arg, text_type) else arg.decode(self.encoding) for arg in args if arg is not None]
+        self.args = [arg if isinstance(arg, str) else arg.decode(self.encoding) for arg in args if arg is not None]
         self._check_args()
 
     def _check_args(self):
-        if any(type(arg)(' ') in arg in arg for arg in self.args[:-1] if isinstance(arg, string_types)):
+        if any(type(arg)(' ') in arg in arg for arg in self.args[:-1] if isinstance(arg, str)):
             raise Error("Space can only appear in the very last arg")
-        if any(type(arg)('\n') in arg for arg in self.args if isinstance(arg, string_types)):
+        if any(type(arg)('\n') in arg for arg in self.args if isinstance(arg, str)):
             raise Error("No newline allowed")
 
     @staticmethod
@@ -40,27 +40,27 @@ class Message:
         return self.__unicode__() if PY3 else self.__bytes__()
 
     def __bytes__(self):
-        return text_type(self).encode(self.encoding)
+        return str(self).encode(self.encoding)
 
     def __unicode__(self):
         self._check_args()
         args = self.args[:]
 
-        if args and u(" ") in args[-1] and not args[-1].startswith(u(":")):
-            args[-1] = u(":{0:s}").format(args[-1])
+        if args and " " in args[-1] and not args[-1].startswith(":"):
+            args[-1] = ":{:s}".format(args[-1])
 
-        return u("{prefix:s}{command:s} {args:s}\r\n").format(
+        return "{prefix:s}{command:s} {args:s}\r\n".format(
             prefix=(
-                u(":{0:s} ").format(self.prefix)
+                ":{:s} ".format(self.prefix)
                 if self.prefix is not None
-                else u("")
+                else ""
             ),
-            command=text_type(self.command),
-            args=u(" ").join(args)
+            command=str(self.command),
+            args=" ".join(args)
         )
 
     def __repr__(self):
-        return repr(text_type(self)[:-2])
+        return repr(str(self)[:-2])
 
     def __eq__(self, other):
         return isinstance(other, Message) \

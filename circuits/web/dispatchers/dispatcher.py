@@ -9,7 +9,7 @@ except ImportError:
     from urllib.parse import quote, unquote  # NOQA
 
 from circuits import BaseComponent, Event, handler
-from circuits.six import text_type
+from six import text_type
 from circuits.web.controllers import BaseController
 from circuits.web.events import response
 from circuits.web.processors import process
@@ -113,7 +113,7 @@ class Dispatcher(BaseComponent):
             if vpath:
                 event.args += tuple(vpath)
 
-            if isinstance(name, text_type):
+            if isinstance(name, str):
                 name = str(name)
 
             return self.fire(

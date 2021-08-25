@@ -1,7 +1,7 @@
-circuits.six module
+six module
 ===================
 
-.. automodule:: circuits.six
+.. automodule:: six
     :members:
     :undoc-members:
     :show-inheritance:

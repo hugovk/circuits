@@ -1,7 +1,7 @@
 import json
 
 from circuits.core import Event
-from circuits.six import PY3, text_type
+from six import PY3, text_type
 
 META_EXCLUDE = set(dir(Event()))
 META_EXCLUDE.add("node_call_id")
@@ -17,13 +17,13 @@ def load_event(s):
 
     args = []
     for arg in data["args"]:
-        if isinstance(arg, text_type):
+        if isinstance(arg, str):
             arg = arg.encode("utf-8")
         args.append(arg)
 
     kwargs = {}
     for k, v in data["kwargs"].items():
-        if isinstance(v, text_type):
+        if isinstance(v, str):
             v = v.encode("utf-8")
         kwargs[str(k)] = v
 
