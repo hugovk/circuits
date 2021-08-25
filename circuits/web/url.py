@@ -25,7 +25,7 @@
 import codecs
 import re
 
-from six.moves.urllib_parse import quote, unquote, urljoin, urlparse, urlunparse
+from urllib.parse import quote, unquote, urljoin, urlparse, urlunparse
 
 # Come codes that we'll need
 IDNA = codecs.lookup('idna')

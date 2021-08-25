@@ -1,4 +1,4 @@
-from six.moves.urllib_parse import parse_qsl
+from urllib.parse import parse_qsl
 
 
 class QueryStringToken:

@@ -8,7 +8,7 @@ import re
 import sys
 import zlib
 
-from six.moves.urllib_parse import urlsplit
+from urllib.parse import urlsplit
 
 from ..headers import Headers
 

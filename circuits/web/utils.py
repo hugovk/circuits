@@ -13,7 +13,7 @@ from io import TextIOWrapper
 from math import sqrt
 
 from circuits.net.utils import is_ssl_handshake  # noqa
-from six.moves.urllib_parse import parse_qs as _parse_qs
+from urllib.parse import parse_qs as _parse_qs
 
 from .exceptions import RangeUnsatisfiable, RequestEntityTooLarge
 
