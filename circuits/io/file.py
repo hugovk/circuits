@@ -17,7 +17,6 @@ from sys import getdefaultencoding
 from circuits.core import Component, Event, handler
 from circuits.core.pollers import BasePoller, Poller
 from circuits.core.utils import findcmp
-from six import PY3, binary_type, string_types
 from circuits.tools import tryimport
 
 from .events import close, closed, eof, error, opened, read, ready
@@ -73,7 +72,7 @@ class File(Component):
         self._mode = mode or self._mode
 
         if isinstance(self._filename, str):
-            kwargs = {"encoding": self._encoding} if PY3 else {}
+            kwargs = {"encoding": self._encoding}
             self._fd = open(self.filename, self.mode, **kwargs)
         else:
             self._fd = self._filename

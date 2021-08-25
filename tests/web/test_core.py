@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import pytest
 
-from six import b, u
 from circuits.web import Controller
 
 from .helpers import HTTPError, urlencode, urlopen

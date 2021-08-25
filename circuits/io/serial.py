@@ -7,7 +7,6 @@ from collections import deque
 from circuits.core import Component, Event, handler
 from circuits.core.pollers import BasePoller, Poller
 from circuits.core.utils import findcmp
-from six import binary_type
 from circuits.tools import tryimport
 
 from .events import close, closed, error, opened, read, ready

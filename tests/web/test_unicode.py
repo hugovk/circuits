@@ -4,7 +4,6 @@ try:
 except ImportError:
     from http.client import HTTPConnection  # NOQA
 
-from six import b
 from circuits.web import Controller
 from circuits.web.client import Client, request
 
@@ -43,13 +42,13 @@ def test_request_body(webapp):
     connection = HTTPConnection(webapp.server.host, webapp.server.port)
     connection.connect()
 
-    body = b("ä")
+    body = "ä".encode("latin-1")
     connection.request("GET", "/request_body", body)
     response = connection.getresponse()
     assert response.status == 200
     assert response.reason == "OK"
     s = response.read()
-    assert s == b("ä")
+    assert s == "ä".encode("latin-1")
 
     connection.close()
 

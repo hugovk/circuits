@@ -5,9 +5,9 @@
 # This module is liberally borrowed (with modifications) from:
 # https://raw.githubusercontent.com/benoitc/http-parser/master/http_parser/pyparser.py
 import re
+import sys
 import zlib
 
-from six import MAXSIZE, PY3, b
 from six.moves.urllib_parse import urlsplit
 
 from ..headers import Headers
@@ -314,7 +314,7 @@ class HttpParser:
                 return False
 
         # Split lines on \r\n keeping the \r\n on each line
-        lines = [(str(line, 'unicode_escape') if PY3 else line) + "\r\n"
+        lines = [(str(line, 'unicode_escape')) + "\r\n"
                  for line in data[:idx].split(b"\r\n")]
 
         # Parse headers into key/value pairs paying attention
@@ -361,7 +361,7 @@ class HttpParser:
         else:
             self._chunked = (te == 'chunked')
             if not self._chunked:
-                self._clen_rest = MAXSIZE
+                self._clen_rest = sys.maxsize
 
         # detect encoding and set decompress object
         encoding = self._headers.get('content-encoding')

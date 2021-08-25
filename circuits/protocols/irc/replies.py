@@ -1,8 +1,6 @@
 """Internet Relay Chat Protocol replies"""
 
 
-from six import u
-
 from .message import Message
 
 

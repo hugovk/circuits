@@ -4,7 +4,6 @@ try:
 except ImportError:
     from http.client import HTTPConnection  # NOQA
 
-from six import b
 from circuits.web import Controller
 
 

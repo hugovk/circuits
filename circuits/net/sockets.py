@@ -21,7 +21,6 @@ from _socket import socket as SocketType
 from circuits.core import BaseComponent, handler
 from circuits.core.pollers import BasePoller, Poller
 from circuits.core.utils import findcmp
-from six import binary_type
 
 from .events import (
     close, closed, connect, connected, disconnect, disconnected, error, read,

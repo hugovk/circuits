@@ -1,8 +1,6 @@
 """Internet Relay Chat message"""
 
 
-from six import PY3, string_types, text_type, u
-
 from .utils import parsemsg
 
 
@@ -37,7 +35,7 @@ class Message:
         return Message(command, *args, prefix=prefix)
 
     def __str__(self):
-        return self.__unicode__() if PY3 else self.__bytes__()
+        return self.__unicode__()
 
     def __bytes__(self):
         return str(self).encode(self.encoding)

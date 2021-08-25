@@ -8,8 +8,6 @@ import random
 from circuits.core.components import BaseComponent
 from circuits.core.handlers import handler
 from circuits.net.events import close, read, write
-from six import string_types
-
 
 class WebSocketCodec(BaseComponent):
 

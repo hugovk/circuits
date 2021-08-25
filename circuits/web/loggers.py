@@ -8,7 +8,6 @@ import sys
 from io import IOBase
 
 from circuits.core import BaseComponent, handler
-from six import string_types, text_type
 
 
 def formattime():

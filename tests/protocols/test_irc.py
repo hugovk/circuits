@@ -9,7 +9,6 @@ from circuits.protocols.irc import (
     PRIVMSG, QUIT, TOPIC, USER, WHOIS, irc_color_to_ansi, joinprefix, parsemsg,
     parseprefix, strip,
 )
-from six import b, u
 
 
 class App(Component):

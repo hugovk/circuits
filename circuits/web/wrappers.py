@@ -7,7 +7,6 @@ from io import BytesIO
 from time import time
 
 from circuits.net.sockets import BUFSIZE
-from six import binary_type, text_type
 
 from .constants import HTTP_STATUS_CODES, SERVER_VERSION
 from .errors import httperror

@@ -4,8 +4,6 @@ This module implements support for parsing and handling headers.
 """
 import re
 
-from six import b, iteritems, u
-
 # Regular expression that matches `special' characters in parameters, the
 # existence of which force quoting of the parameter value.
 
@@ -70,7 +68,7 @@ class HeaderElement:
         return "{}{}".format(self.value, "".join(p))
 
     def __bytes__(self):
-        return b(self.__str__())
+        return self.__str__().encode("latin-1")
 
     def __unicode__(self):
         return self.__str__()

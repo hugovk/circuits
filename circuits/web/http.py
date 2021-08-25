@@ -9,7 +9,6 @@ from socket import socket
 from circuits.core import BaseComponent, Value, handler
 from circuits.net.events import close, write
 from circuits.net.utils import is_ssl_handshake
-from six import text_type
 from six.moves.urllib_parse import quote
 
 from . import wrappers

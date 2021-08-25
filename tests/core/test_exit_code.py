@@ -2,8 +2,6 @@
 import sys
 from subprocess import PIPE, Popen
 
-from six import b
-
 from . import exitcodeapp
 
 

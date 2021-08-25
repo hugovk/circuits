@@ -40,7 +40,6 @@ import re
 from tempfile import TemporaryFile
 from wsgiref.headers import Headers
 
-from six import text_type
 from six.moves.urllib_parse import parse_qs
 
 try:
