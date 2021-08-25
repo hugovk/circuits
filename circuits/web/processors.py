@@ -1,8 +1,6 @@
 import re
 from cgi import parse_header
 
-from six import PY3
-
 from .headers import HeaderElement
 from .parsers import MultipartParser, QueryStringParser
 

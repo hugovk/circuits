@@ -29,7 +29,6 @@ except ImportError:
     from pkgutil import extend_path
     __path__ = extend_path(__path__, __name__)
     import os
-    from six import exec_
     fd = None
     for _path in __path__:
         _path = os.path.join(_path, '__init__.py')
