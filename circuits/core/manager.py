@@ -45,13 +45,13 @@ class TimeoutError(Exception):
     """Raised if wait event timeout occurred"""
 
 
-class CallValue(object):
+class CallValue:
 
     def __init__(self, value):
         self.value = value
 
 
-class ExceptionWrapper(object):
+class ExceptionWrapper:
 
     def __init__(self, exception):
         self.exception = exception
@@ -74,7 +74,7 @@ class Sleep(Iterator):
         return self
 
     def __repr__(self):
-        return "sleep({0:s})".format(repr(self.expiry - time()))
+        return "sleep({:s})".format(repr(self.expiry - time()))
 
     def __next__(self):
         if time() >= self.expiry:
@@ -103,7 +103,7 @@ def sleep(seconds):
     return Sleep(seconds)
 
 
-class Dummy(object):
+class Dummy:
 
     channel = None
 
@@ -112,7 +112,7 @@ _dummy = Dummy()
 del Dummy
 
 
-class _State(object):
+class _State:
 
     __slots__ = ('task', 'run', 'flag', 'event', 'timeout', 'parent', 'task_event', 'tick_handler')
 
@@ -127,7 +127,7 @@ class _State(object):
         self.tick_handler = None
 
 
-class _EventQueue(object):
+class _EventQueue:
     __slots__ = ('_queue', '_priority_queue', '_counter', '_flush_batch')
 
     def __init__(self):
@@ -164,7 +164,7 @@ class _EventQueue(object):
             dispatcher(event, channels, self._flush_batch)
 
 
-class Manager(object):
+class Manager:
 
     """
     The manager class has two roles. As a base class for component
@@ -254,7 +254,7 @@ class Manager(object):
 
         name = self.__class__.__name__
 
-        channel = "/{0:s}".format(str(getattr(self, "channel", "")))
+        channel = "/{:s}".format(str(getattr(self, "channel", "")))
 
         q = len(self._queue)
         state = "R" if self.running else "S"
@@ -262,7 +262,7 @@ class Manager(object):
         pid = current_process().pid
 
         if pid:
-            id = "%s:%s" % (pid, current_thread().getName())
+            id = "{}:{}".format(pid, current_thread().getName())
         else:
             id = current_thread().getName()
 
@@ -585,8 +585,7 @@ class Manager(object):
         been dispatched (see :func:`circuits.core.handlers.handler`).
         """
         value = self.fire(event, *channels)
-        for r in self.waitEvent(event, *event.channels, **kwargs):
-            yield r
+        yield from self.waitEvent(event, *event.channels, **kwargs)
         yield CallValue(value)
 
     call = callEvent
@@ -978,7 +977,7 @@ class Manager(object):
             for _ in range(3):
                 self.tick()
         except Exception as exc:
-            stderr.write("Unhandled ERROR: {0:s}\n".format(exc))
+            stderr.write("Unhandled ERROR: {:s}\n".format(exc))
             stderr.write(format_exc())
         finally:
             try:

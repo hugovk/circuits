@@ -22,7 +22,7 @@ class HTTPException(Exception):
     description = None
 
     def __init__(self, description=None, traceback=None):
-        super(HTTPException, self).__init__("%d %s" % (self.code, self.name))
+        super().__init__("%d %s" % (self.code, self.name))
         if description is not None:
             self.description = description
         if traceback is not None:
@@ -34,7 +34,7 @@ class HTTPException(Exception):
         return HTTP_STATUS_CODES.get(self.code, '')
 
     def __repr__(self):
-        return '<%s %r>' % (self.__class__.__name__, str(self))
+        return '<{} {!r}>'.format(self.__class__.__name__, str(self))
 
 
 class BadRequest(HTTPException):
@@ -315,7 +315,7 @@ class Redirect(HTTPException):
     code = 303
 
     def __init__(self, urls, status=None):
-        super(Redirect, self).__init__()
+        super().__init__()
 
         if isinstance(urls, str):
             self.urls = [urls]

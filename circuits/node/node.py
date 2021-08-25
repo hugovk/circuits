@@ -52,7 +52,7 @@ class Node(BaseComponent):
         :type send_event_firewall:   function
         :type send_event_firewall:   method
         """
-        super(Node, self).__init__(channel=channel, **kwargs)
+        super().__init__(channel=channel, **kwargs)
 
         if port is not None:
             self.server = Server(
@@ -114,7 +114,7 @@ class Node(BaseComponent):
 
         client_channel = kwargs.pop(
             'channel',
-            '%s_client_%s' % (self.channel, connection_name)
+            '{}_client_{}'.format(self.channel, connection_name)
         )
         reconnect_delay = kwargs.pop('reconnect_delay', 10)
         client = Client(hostname, port, channel=client_channel, **kwargs)

@@ -116,7 +116,7 @@ def dumps(params, methodname=None, methodresponse=None, encoding=None,
         return json.dumps(request)
 
 
-class Unmarshaller(object):
+class Unmarshaller:
 
     def __init__(self, encoding):
         self.data = None
@@ -133,7 +133,7 @@ class Unmarshaller(object):
         return json.loads(self.data.decode(self.encoding))
 
 
-class Parser(object):
+class Parser:
 
     def __init__(self, unmarshaller):
         self._target = unmarshaller
@@ -149,7 +149,7 @@ class Parser(object):
         self._target.feed(self.data)
 
 
-class _Method(object):
+class _Method:
     # some magic to bind an JSON-RPC method to an RPC server.
     # supports "nested" methods (e.g. examples.getStateName)
 
@@ -158,7 +158,7 @@ class _Method(object):
         self.__name = name
 
     def __getattr__(self, name):
-        return _Method(self.__send, "%s.%s" % (self.__name, name))
+        return _Method(self.__send, "{}.{}".format(self.__name, name))
 
     def __call__(self, *args):
         return self.__send(self.__name, args)
@@ -384,13 +384,13 @@ class SafeTransport(Transport):
             return HTTPS(host, None, **(x509 or {}))
 
 
-class ServerProxy(object):
+class ServerProxy:
 
     def __init__(self, uri, transport=None, encoding=None,
                  verbose=None, allow_none=0):
         utype, uri = splittype(uri)
         if utype not in ("http", "https"):
-            raise IOError("Unsupported JSONRPC protocol")
+            raise OSError("Unsupported JSONRPC protocol")
         self.__host, self.__handler = splithost(uri)
         if not self.__handler:
             self.__handler = "/RPC2"

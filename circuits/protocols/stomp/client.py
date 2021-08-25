@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ Circuits component for handling Stomp Connection """
 
 import logging
@@ -70,9 +69,9 @@ class StompClient(BaseComponent):
             ssl_context = ssl_params
 
         if use_ssl:
-            uri = "ssl://%s:%s" % (host, port)
+            uri = "ssl://{}:{}".format(host, port)
         else:
-            uri = "tcp://%s:%s" % (host, port)
+            uri = "tcp://{}:{}".format(host, port)
 
         # Configure failover options so it only tries to connect once
         self._stomp_server = "failover:(%s)?maxReconnectAttempts=1,startupMaxReconnectAttempts=1" % uri

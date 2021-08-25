@@ -22,7 +22,7 @@ class Logger(BaseComponent):
     format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
 
     def __init__(self, file=None, logger=None, **kwargs):
-        super(Logger, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         if isinstance(file, string_types):
             self.file = open(os.path.abspath(os.path.expanduser(file)), "a")
@@ -52,7 +52,7 @@ class Logger(BaseComponent):
                  "l": "-",
                  "u": getattr(request, "login", None) or "-",
                  "t": formattime(),
-                 "r": "%s %s %s" % (request.method, request.path, protocol),
+                 "r": "{} {} {}".format(request.method, request.path, protocol),
                  "s": int(response.status),
                  "b": outheaders.get("Content-Length", "") or "-",
                  "f": inheaders.get("Referer", ""),

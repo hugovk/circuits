@@ -46,7 +46,7 @@ class HTTP(BaseComponent):
     channel = "web"
 
     def __init__(self, server, encoding=HTTP_ENCODING, channel=channel):
-        super(HTTP, self).__init__(channel=channel)
+        super().__init__(channel=channel)
 
         self._server = server
         self._encoding = encoding
@@ -82,10 +82,10 @@ class HTTP(BaseComponent):
         if is_unix_socket(server.host):
             url = server.host
         else:
-            url = "{0:s}://{1:s}{2:s}".format(
+            url = "{:s}://{:s}{:s}".format(
                 (server.secure and "https") or "http",
                 server.host or "0.0.0.0",
-                ":{0:d}".format(server.port or 80)
+                ":{:d}".format(server.port or 80)
                 if server.port not in (80, 443)
                 else ""
             )
@@ -276,7 +276,7 @@ class HTTP(BaseComponent):
                 # the major HTTP version differs
                 return self.fire(httperror(req, res, 505))
 
-            res.protocol = "HTTP/{0:d}.{1:d}".format(*min(rp, sp))
+            res.protocol = "HTTP/{:d}.{:d}".format(*min(rp, sp))
             res.close = not parser.should_keep_alive()
 
         clen = int(req.headers.get("Content-Length", "0"))

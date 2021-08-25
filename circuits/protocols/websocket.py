@@ -40,7 +40,7 @@ class WebSocketCodec(BaseComponent):
         :param sock: the socket used in Read and write events
             (if used in a server, else None)
         """
-        super(WebSocketCodec, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self._sock = sock
 
@@ -202,7 +202,7 @@ class WebSocketCodec(BaseComponent):
                 masking_key = bytearray(list(os.urandom(4)))
             except NotImplementedError:
                 masking_key \
-                    = bytearray([random.randint(0, 255) for i in range(4)])
+                    = bytearray(random.randint(0, 255) for i in range(4))
             tail += masking_key
             for i, c in enumerate(data):
                 tail.append(c ^ masking_key[i % 4])

@@ -38,7 +38,7 @@ class ipc(Event):
         :type channel:  str
         """
 
-        super(ipc, self).__init__(event, channel=channel)
+        super().__init__(event, channel=channel)
 
 
 class Bridge(BaseComponent):

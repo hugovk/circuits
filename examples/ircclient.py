@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """Example IRC Client
 
 A basic IRC client with a very basic console interface.
@@ -9,7 +8,6 @@ For usage type:
    ./ircclient.py --help
 
 """
-from __future__ import print_function
 
 import os
 from optparse import OptionParser
@@ -97,7 +95,7 @@ class Client(Component):
 
         nick = self.nick
         hostname = self.hostname
-        name = "%s on %s using circuits/%s" % (nick, hostname, systemVersion)
+        name = "{} on {} using circuits/{}".format(nick, hostname, systemVersion)
 
         self.fire(NICK(nick))
         self.fire(USER(nick, nick, self.hostname, name))
@@ -137,7 +135,7 @@ class Client(Component):
             print("Joined %s" % channel)
         else:
             print(
-                "--> %s (%s) has joined %s" % (
+                "--> {} ({}) has joined {}".format(
                     source[0], "@".join(source[1:]), channel
                 )
             )
@@ -149,7 +147,7 @@ class Client(Component):
         notice we receieve from the server.
         """
 
-        print("-%s- %s" % (source[0], message))
+        print("-{}- {}".format(source[0], message))
 
     def privmsg(self, source, target, message):
         """privmsg Event
@@ -159,9 +157,9 @@ class Client(Component):
         """
 
         if target[0] == "#":
-            print("<%s> %s" % (source[0], message))
+            print("<{}> {}".format(source[0], message))
         else:
-            print("-%s- %s" % (source[0], message))
+            print("-{}- {}".format(source[0], message))
 
     @handler("read", channel="stdin")
     def stdin_read(self, data):
@@ -174,7 +172,7 @@ class Client(Component):
 
         data = data.strip().decode("utf-8")
 
-        print("<{0:s}> {1:s}".format(self.nick, data))
+        print("<{:s}> {:s}".format(self.nick, data))
         self.fire(PRIVMSG(self.ircchannel, data))
 
 

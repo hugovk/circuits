@@ -13,7 +13,7 @@ class response(Event):
     """response Event"""
 
 
-class ResponseObject(object):
+class ResponseObject:
 
     def __init__(self, headers, status, version):
         self.headers = headers
@@ -27,7 +27,7 @@ class ResponseObject(object):
         self.reason = HTTP_STATUS_CODES[self.status]
 
     def __repr__(self):
-        return "<Response {0:d} {1:s} {2:s} ({3:d})>".format(
+        return "<Response {:d} {:s} {:s} ({:d})>".format(
             self.status,
             self.reason,
             self.headers.get("Content-Type"),
@@ -43,7 +43,7 @@ class HTTP(BaseComponent):
     channel = "web"
 
     def __init__(self, encoding="utf-8", channel=channel):
-        super(HTTP, self).__init__(channel=channel)
+        super().__init__(channel=channel)
 
         self._encoding = encoding
 

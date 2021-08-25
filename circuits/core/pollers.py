@@ -47,7 +47,7 @@ class BasePoller(BaseComponent):
     channel = None
 
     def __init__(self, channel=channel):
-        super(BasePoller, self).__init__(channel=channel)
+        super().__init__(channel=channel)
 
         self._read = []
         self._write = []
@@ -98,7 +98,7 @@ class BasePoller(BaseComponent):
                 return self._ctrl_recv.recv(1)
             else:
                 return os.read(self._ctrl_recv, 1)
-        except (EnvironmentError, EOFError):
+        except (OSError, EOFError):
             return b"\0"
 
     def addReader(self, source, fd):
@@ -154,7 +154,7 @@ class Select(BasePoller):
     channel = "select"
 
     def __init__(self, channel=channel):
-        super(Select, self).__init__(channel=channel)
+        super().__init__(channel=channel)
 
         self._read.append(self._ctrl_recv)
 
@@ -182,7 +182,7 @@ class Select(BasePoller):
             # Something *totally* invalid (object w/o fileno, non-integral
             # result) was passed
             return self._preenDescriptors()
-        except (SelectError, SocketError, IOError) as e:
+        except (SelectError, SocketError, OSError) as e:
             # select(2) encountered an error
             if e.args[0] in (0, 2):
                 # windows does this if it got an empty list
@@ -221,7 +221,7 @@ class Poll(BasePoller):
     channel = "poll"
 
     def __init__(self, channel=channel):
-        super(Poll, self).__init__(channel=channel)
+        super().__init__(channel=channel)
 
         self._map = {}
         self._poller = select.poll()
@@ -250,30 +250,30 @@ class Poll(BasePoller):
             self._poller.register(fd, mask)
             self._map[fileno] = fd
         else:
-            super(Poll, self).discard(fd)
+            super().discard(fd)
             try:
                 del self._map[fileno]
             except KeyError:
                 pass
 
     def addReader(self, source, fd):
-        super(Poll, self).addReader(source, fd)
+        super().addReader(source, fd)
         self._updateRegistration(fd)
 
     def addWriter(self, source, fd):
-        super(Poll, self).addWriter(source, fd)
+        super().addWriter(source, fd)
         self._updateRegistration(fd)
 
     def removeReader(self, fd):
-        super(Poll, self).removeReader(fd)
+        super().removeReader(fd)
         self._updateRegistration(fd)
 
     def removeWriter(self, fd):
-        super(Poll, self).removeWriter(fd)
+        super().removeWriter(fd)
         self._updateRegistration(fd)
 
     def discard(self, fd):
-        super(Poll, self).discard(fd)
+        super().discard(fd)
         self._updateRegistration(fd)
 
     def _generate_events(self, event):
@@ -304,7 +304,7 @@ class Poll(BasePoller):
         if event & self._disconnected_flag and not (event & select.POLLIN):
             self.fire(_disconnect(fd), self.getTarget(fd))
             self._poller.unregister(fileno)
-            super(Poll, self).discard(fd)
+            super().discard(fd)
             del self._map[fileno]
         else:
             try:
@@ -316,7 +316,7 @@ class Poll(BasePoller):
                 self.fire(_error(fd, e), self.getTarget(fd))
                 self.fire(_disconnect(fd), self.getTarget(fd))
                 self._poller.unregister(fileno)
-                super(Poll, self).discard(fd)
+                super().discard(fd)
                 del self._map[fileno]
 
 
@@ -331,7 +331,7 @@ class EPoll(BasePoller):
     channel = "epoll"
 
     def __init__(self, channel=channel):
-        super(EPoll, self).__init__(channel=channel)
+        super().__init__(channel=channel)
 
         self._map = {}
         self._poller = select.epoll()
@@ -345,7 +345,7 @@ class EPoll(BasePoller):
         try:
             fileno = fd.fileno() if not isinstance(fd, int) else fd
             self._poller.unregister(fileno)
-        except (SocketError, IOError, ValueError) as e:
+        except (SocketError, OSError, ValueError) as e:
             if e.args[0] == EBADF:
                 keys = [k for k, v in list(self._map.items()) if v == fd]
                 for key in keys:
@@ -362,26 +362,26 @@ class EPoll(BasePoller):
             self._poller.register(fd, mask)
             self._map[fileno] = fd
         else:
-            super(EPoll, self).discard(fd)
+            super().discard(fd)
 
     def addReader(self, source, fd):
-        super(EPoll, self).addReader(source, fd)
+        super().addReader(source, fd)
         self._updateRegistration(fd)
 
     def addWriter(self, source, fd):
-        super(EPoll, self).addWriter(source, fd)
+        super().addWriter(source, fd)
         self._updateRegistration(fd)
 
     def removeReader(self, fd):
-        super(EPoll, self).removeReader(fd)
+        super().removeReader(fd)
         self._updateRegistration(fd)
 
     def removeWriter(self, fd):
-        super(EPoll, self).removeWriter(fd)
+        super().removeWriter(fd)
         self._updateRegistration(fd)
 
     def discard(self, fd):
-        super(EPoll, self).discard(fd)
+        super().discard(fd)
         self._updateRegistration(fd)
 
     def _generate_events(self, event):
@@ -391,7 +391,7 @@ class EPoll(BasePoller):
                 l = self._poller.poll()
             else:
                 l = self._poller.poll(timeout)
-        except IOError as e:
+        except OSError as e:
             if e.args[0] == EINTR:
                 return
         except SelectError as e:
@@ -415,7 +415,7 @@ class EPoll(BasePoller):
         if event & self._disconnected_flag and not (event & select.POLLIN):
             self.fire(_disconnect(fd), self.getTarget(fd))
             self._poller.unregister(fileno)
-            super(EPoll, self).discard(fd)
+            super().discard(fd)
             del self._map[fileno]
         else:
             try:
@@ -427,7 +427,7 @@ class EPoll(BasePoller):
                 self.fire(_error(fd, e), self.getTarget(fd))
                 self.fire(_disconnect(fd), self.getTarget(fd))
                 self._poller.unregister(fileno)
-                super(EPoll, self).discard(fd)
+                super().discard(fd)
                 del self._map[fileno]
 
 
@@ -442,7 +442,7 @@ class KQueue(BasePoller):
     channel = "kqueue"
 
     def __init__(self, channel=channel):
-        super(KQueue, self).__init__(channel=channel)
+        super().__init__(channel=channel)
         self._map = {}
         self._poller = select.kqueue()
 
@@ -457,21 +457,21 @@ class KQueue(BasePoller):
         )
 
     def addReader(self, source, sock):
-        super(KQueue, self).addReader(source, sock)
+        super().addReader(source, sock)
         self._map[sock.fileno()] = sock
         self._poller.control(
             [select.kevent(sock, select.KQ_FILTER_READ, select.KQ_EV_ADD)], 0
         )
 
     def addWriter(self, source, sock):
-        super(KQueue, self).addWriter(source, sock)
+        super().addWriter(source, sock)
         self._map[sock.fileno()] = sock
         self._poller.control(
             [select.kevent(sock, select.KQ_FILTER_WRITE, select.KQ_EV_ADD)], 0
         )
 
     def removeReader(self, sock):
-        super(KQueue, self).removeReader(sock)
+        super().removeReader(sock)
         self._poller.control(
             [
                 select.kevent(sock, select.KQ_FILTER_READ, select.KQ_EV_DELETE)
@@ -480,14 +480,14 @@ class KQueue(BasePoller):
         )
 
     def removeWriter(self, sock):
-        super(KQueue, self).removeWriter(sock)
+        super().removeWriter(sock)
         self._poller.control(
             [select.kevent(sock, select.KQ_FILTER_WRITE, select.KQ_EV_DELETE)],
             0
         )
 
     def discard(self, sock):
-        super(KQueue, self).discard(sock)
+        super().discard(sock)
         del self._map[sock.fileno()]
         self._poller.control(
             [

@@ -20,7 +20,7 @@ class JSONRPC(BaseComponent):
     channel = "web"
 
     def __init__(self, path=None, encoding="utf-8", rpc_channel="*"):
-        super(JSONRPC, self).__init__()
+        super().__init__()
 
         if json is None:
             raise RuntimeError("No json support available")
@@ -41,7 +41,7 @@ class JSONRPC(BaseComponent):
             o = json.loads(data)
             id, method, params = o["id"], o["method"], o.get("params", {})
             if isinstance(params, dict):
-                params = dict([(str(k), v) for k, v in params.iteritems()])
+                params = {str(k): v for k, v in params.iteritems()}
 
             method = str(method) if not isinstance(method, binary_type) else method
 
@@ -52,7 +52,7 @@ class JSONRPC(BaseComponent):
 
             yield self._response(id, value.value)
         except Exception as e:
-            yield self._error(-1, 100, "%s: %s" % (e.__class__.__name__, e))
+            yield self._error(-1, 100, "{}: {}".format(e.__class__.__name__, e))
         finally:
             event.stop()
 

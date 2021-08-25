@@ -33,7 +33,7 @@ def foo():
 
 
 def pid():
-    return "Hello from {0:d}".format(getpid())
+    return "Hello from {:d}".format(getpid())
 
 
 def add(a, b):

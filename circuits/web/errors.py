@@ -31,7 +31,7 @@ class httperror(Event):
         The constructor creates a new instance and modifies the *response*
         argument to reflect the error.
         """
-        super(httperror, self).__init__(request, response, code, **kwargs)
+        super().__init__(request, response, code, **kwargs)
 
         # Override HTTPError subclasses
         self.name = "httperror"
@@ -50,7 +50,7 @@ class httperror(Event):
 
         if self.error is not None:
             stack = self.error[2] if isinstance(self.error[2], (list, tuple)) else traceback.format_tb(self.error[2])
-            self.traceback = "ERROR: (%s) %s\n%s" % (
+            self.traceback = "ERROR: ({}) {}\n{}".format(
                 self.error[0], self.error[1], "".join(stack)
             )
         else:
@@ -87,7 +87,7 @@ class httperror(Event):
             index = ["code", "name", "description"]
             if self.request.print_debug:
                 index.append("traceback")
-            return json.dumps(dict((key, self.data[key]) for key in index))
+            return json.dumps({key: self.data[key] for key in index})
 
         if not self.request.print_debug:
             self.data["traceback"] = ''
@@ -164,7 +164,7 @@ class redirect(httperror):
             if code < 300 or code > 399:
                 raise ValueError("status code must be between 300 and 399.")
 
-        super(redirect, self).__init__(request, response, code)
+        super().__init__(request, response, code)
 
         if code in (300, 301, 302, 303, 307, 308):
             response.headers["Content-Type"] = "text/html"

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 try:
     from httplib import HTTPConnection
 except ImportError:
@@ -64,7 +63,7 @@ def test_response_body(webapp):
     assert response.status == 200
     assert response.reason == "OK"
     s = response.read()
-    assert s == u"ä".encode('utf-8')
+    assert s == "ä".encode()
 
     connection.close()
 
@@ -80,7 +79,7 @@ def test_request_headers(webapp):
     assert response.status == 200
     assert response.reason == "OK"
     s = response.read()
-    assert s == u"ä".encode('utf-8')
+    assert s == "ä".encode()
 
     connection.close()
 
@@ -91,7 +90,7 @@ def test_response_headers(webapp):
     client.fire(
         request(
             "GET",
-            "http://%s:%s/response_headers" % (
+            "http://{}:{}/response_headers".format(
                 webapp.server.host, webapp.server.port
             )
         )
@@ -104,7 +103,7 @@ def test_response_headers(webapp):
     s = client.response.read()
     a = client.response.headers.get('A')
     assert a == "ä"
-    assert s == u"ä".encode('utf-8')
+    assert s == "ä".encode()
 
 
 def test_argument(webapp):
@@ -117,6 +116,6 @@ def test_argument(webapp):
     assert response.status == 200
     assert response.reason == "OK"
     s = response.read()
-    assert s.decode('utf-8') == u'\u2192'
+    assert s.decode('utf-8') == '\u2192'
 
     connection.close()

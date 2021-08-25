@@ -128,7 +128,7 @@ def serve_file(request, response, path, type=None, disposition=None,
     if disposition is not None:
         if name is None:
             name = os.path.basename(path)
-        cd = '%s; filename="%s"' % (disposition, name)
+        cd = '{}; filename="{}"'.format(disposition, name)
         response.headers["Content-Disposition"] = cd
 
     # Set Content-Length and use an iterable (file object)
@@ -150,7 +150,7 @@ def serve_file(request, response, path, type=None, disposition=None,
                 r_len = stop - start
                 response.status = 206
                 response.headers['Content-Range'] = (
-                    "bytes %s-%s/%s" % (start, stop - 1, c_len)
+                    "bytes {}-{}/{}".format(start, stop - 1, c_len)
                 )
                 response.headers['Content-Length'] = r_len
                 bodyfile.seek(start)
@@ -245,7 +245,7 @@ def validate_etags(request, response, autotags=False):
         if conditions and not (conditions == ["*"] or etag in conditions):
             return httperror(
                 request, response, 412,
-                description="If-Match failed: ETag %r did not match %r" % (
+                description="If-Match failed: ETag {!r} did not match {!r}".format(
                     etag, conditions
                 )
             )
@@ -259,7 +259,7 @@ def validate_etags(request, response, autotags=False):
                 return httperror(
                     request, response, 412,
                     description=(
-                        "If-None-Match failed: ETag %r matched %r" % (
+                        "If-None-Match failed: ETag {!r} matched {!r}".format(
                             etag, conditions
                         )
                     )

@@ -10,7 +10,7 @@ class Error(Exception):
     """Error Exception"""
 
 
-class Message(object):
+class Message:
 
     def __init__(self, command, *args, **kwargs):
         self.command = command

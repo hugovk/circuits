@@ -43,7 +43,7 @@ class Static(BaseComponent):
 
     def __init__(self, path=None, docroot=None,
                  defaults=("index.html", "index.xhtml",), dirlisting=False, **kwargs):
-        super(Static, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.path = path
         self.docroot = os.path.abspath(
@@ -111,7 +111,7 @@ class Static(BaseComponent):
                         url_up = os.path.join("/", os.path.split(path)[0])
                     else:
                         url_up = os.path.join(cur_dir, "..")
-                    url_up = '<li><a href="%s">%s</a></li>' % (escape(url_up, True), "..")
+                    url_up = '<li><a href="{}">{}</a></li>'.format(escape(url_up, True), "..")
 
                 listing = []
                 for item in os.listdir(directory):
@@ -121,11 +121,11 @@ class Static(BaseComponent):
                             os.path.join(self.docroot, path, item)
                         )
                         if os.path.isdir(location):
-                            li = '<li><a href="%s/">%s/</a></li>' % (
+                            li = '<li><a href="{}/">{}/</a></li>'.format(
                                 escape(quote(url), True), escape(item)
                             )
                         else:
-                            li = '<li><a href="%s">%s</a></li>' % (
+                            li = '<li><a href="{}">{}</a></li>'.format(
                                 escape(quote(url), True), escape(item)
                             )
                         listing.append(li)

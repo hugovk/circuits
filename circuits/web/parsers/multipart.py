@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 '''
 Parser for multipart/form-data
 ==============================
@@ -137,8 +136,8 @@ def copy_file(stream, target, maxread=-1, buffer_size=2 * 16):
 _special = re.escape('()<>@,;:\\"/[]?={} \t')
 _re_special = re.compile('[%s]' % _special)
 _qstr = '"(?:\\\\.|[^"])*"'  # Quoted string
-_value = '(?:[^%s]+|%s)' % (_special, _qstr)  # Save or quoted string
-_option = '(?:;|^)\s*([^%s]+)\s*=\s*(%s)' % (_special, _value)
+_value = '(?:[^{}]+|{})'.format(_special, _qstr)  # Save or quoted string
+_option = r'(?:;|^)\s*([^{}]+)\s*=\s*({})'.format(_special, _value)
 # key=value part of an Content-Type like header
 _re_option = re.compile(_option)
 
@@ -178,7 +177,7 @@ class MultipartError(ValueError):
     pass
 
 
-class MultipartParser(object):
+class MultipartParser:
 
     def __init__(self, stream, boundary, content_length=-1,
                  disk_limit=2 ** 30, mem_limit=2 ** 20, memfile_limit=2 ** 18,
@@ -312,7 +311,7 @@ class MultipartParser(object):
             raise MultipartError("Unexpected end of multipart stream.")
 
 
-class MultipartPart(object):
+class MultipartPart:
 
     def __init__(self, buffer_size=2 ** 16, memfile_limit=2 ** 18, charset='latin1'):
         self.headerlist = []

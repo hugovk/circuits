@@ -88,7 +88,7 @@ def handler(*names, **kwargs):
     return wrapper
 
 
-class Unknown(object):
+class Unknown:
 
     """Unknown Dummy Component"""
 
@@ -114,7 +114,7 @@ def reprhandler(handler):
 
     method = handler.__name__
 
-    priority = "[%0.2f]" % (handler.priority,) if handler.priority else ""
+    priority = "[{:0.2f}]".format(handler.priority) if handler.priority else ""
 
     return format % (channel, names, priority, instance, method)
 
@@ -122,7 +122,7 @@ def reprhandler(handler):
 class HandlerMetaClass(type):
 
     def __init__(cls, name, bases, ns):
-        super(HandlerMetaClass, cls).__init__(name, bases, ns)
+        super().__init__(name, bases, ns)
 
         callables = (x for x in ns.items() if isinstance(x[1], Callable))
         for name, callable in callables:

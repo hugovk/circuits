@@ -32,7 +32,7 @@ class App(Component):
 
     def started(self, component):
         x = yield self.call(hello())
-        print("{0:d}".format(x.value))
+        print("{:d}".format(x.value))
         self.stop()
 
 

@@ -40,7 +40,7 @@ def file_generator(input, chunkSize=BUFSIZE):
     input.close()
 
 
-class Host(object):
+class Host:
 
     """An internet address.
 
@@ -60,10 +60,10 @@ class Host(object):
         self.name = name
 
     def __repr__(self):
-        return "Host(%r, %r, %r)" % (self.ip, self.port, self.name)
+        return "Host({!r}, {!r}, {!r})".format(self.ip, self.port, self.name)
 
 
-class HTTPStatus(object):
+class HTTPStatus:
 
     __slots__ = ("_reason", "_status",)
 
@@ -77,33 +77,33 @@ class HTTPStatus(object):
     def __lt__(self, other):
         if isinstance(other, int):
             return self._status < other
-        return super(HTTPStatus, self).__lt__(other)
+        return super().__lt__(other)
 
     def __gt__(self, other):
         if isinstance(other, int):
             return self._status > other
-        return super(HTTPStatus, self).__gt__(other)
+        return super().__gt__(other)
 
     def __le__(self, other):
         if isinstance(other, int):
             return self._status <= other
-        return super(HTTPStatus, self).__le__(other)
+        return super().__le__(other)
 
     def __ge__(self, other):
         if isinstance(other, int):
             return self._status >= other
-        return super(HTTPStatus, self).__ge__(other)
+        return super().__ge__(other)
 
     def __eq__(self, other):
         if isinstance(other, int):
             return self._status == other
-        return super(HTTPStatus, self).__eq__(other)
+        return super().__eq__(other)
 
     def __str__(self):
-        return "{0:d} {1:s}".format(self._status, self._reason)
+        return "{:d} {:s}".format(self._status, self._reason)
 
     def __repr__(self):
-        return "<Status (status={0:d} reason={1:s}>".format(
+        return "<Status (status={:d} reason={:s}>".format(
             self._status, self._reason
         )
 
@@ -119,7 +119,7 @@ class HTTPStatus(object):
         return self._reason
 
 
-class Request(object):
+class Request:
 
     """Creates a new Request object to hold information about a request.
 
@@ -207,30 +207,30 @@ class Request(object):
         self.host = host
         self.port = port
 
-        base = "{0:s}://{1:s}{2:s}/".format(
+        base = "{:s}://{:s}{:s}/".format(
             self.scheme,
             self.host,
-            ":{0:d}".format(self.port)
+            ":{:d}".format(self.port)
             if self.port not in (80, 443)
             else ""
         )
 
         self.base = parse_url(base)
 
-        url = "{0:s}{1:s}{2:s}".format(
+        url = "{:s}{:s}{:s}".format(
             base,
             self.path,
-            "?{0:s}".format(self.qs) if self.qs else ""
+            "?{:s}".format(self.qs) if self.qs else ""
         )
         self.uri = parse_url(url)
         self.uri.sanitize()
 
     def __repr__(self):
         protocol = "HTTP/%d.%d" % self.protocol
-        return "<Request %s %s %s>" % (self.method, self.path, protocol)
+        return "<Request {} {} {}>".format(self.method, self.path, protocol)
 
 
-class Body(object):
+class Body:
 
     """Response Body"""
 
@@ -267,7 +267,7 @@ class Body(object):
         response._body = value
 
 
-class Status(object):
+class Status:
 
     """Response Status"""
 
@@ -283,7 +283,7 @@ class Status(object):
         response._status = value
 
 
-class Response(object):
+class Response:
 
     """Response(sock, request) -> new Response object
 
@@ -334,8 +334,8 @@ class Response(object):
     def __str__(self):
         self.prepare()
         protocol = self.protocol
-        status = "{0:s}".format(self.status)
-        return "{0:s} {1:s}\r\n".format(protocol, status)
+        status = "{:s}".format(self.status)
+        return "{:s} {:s}\r\n".format(protocol, status)
 
     def __bytes__(self):
         return str(self).encode(self.encoding)  # FIXME: this is wrong. HTTP headers must be ISO8859-1. This should only encode the body as UTF-8.
@@ -343,7 +343,7 @@ class Response(object):
     def prepare(self):
         # Set a default content-Type if we don't have one.
         self.headers.setdefault(
-            "Content-Type", "text/html; charset={0:s}".format(self.encoding)
+            "Content-Type", "text/html; charset={:s}".format(self.encoding)
         )
 
         cLength = None
@@ -354,12 +354,12 @@ class Response(object):
                 cLength = len(self.body.encode(self.encoding))
             elif isinstance(self.body, list):
                 cLength = sum(
-                    [
+                    
                         len(s.encode(self.encoding))
                         if not isinstance(s, bytes)
                         else len(s) for s in self.body
                         if s is not None
-                    ]
+                    
                 )
 
         if cLength is not None:

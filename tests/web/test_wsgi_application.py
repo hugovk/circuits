@@ -12,7 +12,7 @@ class Root(Controller):
 
     def test_args(self, *args, **kwargs):
         args = [arg if isinstance(arg, str) else arg.encode() for arg in args]
-        return "%s\n%s" % (repr(tuple(args)), repr(kwargs))
+        return "{}\n{}".format(repr(tuple(args)), repr(kwargs))
 
     def test_redirect(self):
         return self.redirect("/")
@@ -46,7 +46,7 @@ def test_404(webapp):
 def test_args(webapp):
     args = ("1", "2", "3")
     kwargs = {"1": "one", "2": "two", "3": "three"}
-    url = "%s/test_args/%s" % (webapp.server.http.base, "/".join(args))
+    url = "{}/test_args/{}".format(webapp.server.http.base, "/".join(args))
     data = urlencode(kwargs).encode()
 
     f = urlopen(url, data)

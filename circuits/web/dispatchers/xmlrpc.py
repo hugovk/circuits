@@ -21,7 +21,7 @@ class XMLRPC(BaseComponent):
     channel = "web"
 
     def __init__(self, path=None, encoding="utf-8", rpc_channel="*"):
-        super(XMLRPC, self).__init__()
+        super().__init__()
 
         self.path = path
         self.encoding = encoding
@@ -38,7 +38,7 @@ class XMLRPC(BaseComponent):
             data = req.body.read()
             params, method = loads(data)
 
-            if not isinstance(method, (str, bytes, type(u''))):
+            if not isinstance(method, (str, bytes, str)):
                 method = str(method)
             if not isinstance(method, bytes) and str is bytes:  # Python 2
                 method = method.encode(self.encoding)
@@ -46,7 +46,7 @@ class XMLRPC(BaseComponent):
             value = yield self.call(rpc.create(method, *params), self.rpc_channel)
             yield self._response(value.value)
         except Exception as exc:
-            yield self._error(1, "%s: %s" % (type(exc).__name__, exc))
+            yield self._error(1, "{}: {}".format(type(exc).__name__, exc))
         finally:
             event.stop()
 

@@ -33,7 +33,7 @@ class prepare_unregister(Event):
     complete = True
 
     def __init__(self, *args, **kwargs):
-        super(prepare_unregister, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def in_subtree(self, component):
         """
@@ -84,12 +84,12 @@ class BaseComponent(Manager):
     channel = "*"
 
     def __new__(cls, *args, **kwargs):
-        self = super(BaseComponent, cls).__new__(cls)
+        self = super().__new__(cls)
 
-        handlers = dict(
-            [(k, v) for k, v in list(cls.__dict__.items())
-                if getattr(v, "handler", False)]
-        )
+        handlers = {
+            k: v for k, v in list(cls.__dict__.items())
+                if getattr(v, "handler", False)
+        }
 
         def overridden(x):
             return x in handlers and handlers[x].override
@@ -101,7 +101,7 @@ class BaseComponent(Manager):
                     p2 = getattr(v, "handler", False)
                     p3 = overridden(k)
                     if p1 and p2 and not p3:
-                        name = "%s_%s" % (base.__name__, k)
+                        name = "{}_{}".format(base.__name__, k)
                         method = MethodType(v, self)
                         setattr(self, name, method)
 
@@ -110,7 +110,7 @@ class BaseComponent(Manager):
     def __init__(self, *args, **kwargs):
         "initializes x; see x.__class__.__doc__ for signature"
 
-        super(BaseComponent, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.channel = kwargs.get("channel", self.channel) or "*"
 
@@ -211,10 +211,10 @@ class BaseComponent(Manager):
     def handlers(cls):
         """Returns a list of all event handlers for this Component"""
 
-        return list(set(
+        return list({
             getattr(cls, k) for k in dir(cls)
             if getattr(getattr(cls, k), "handler", False)
-        ))
+        })
 
     @classmethod
     def events(cls):
@@ -225,10 +225,10 @@ class BaseComponent(Manager):
             if getattr(getattr(cls, k), "handler", False)
         )
 
-        return list(set(
+        return list({
             name for name in chain(*handlers)
             if not name.startswith("_")
-        ))
+        })
 
     @classmethod
     def handles(cls, *names):

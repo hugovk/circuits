@@ -12,7 +12,7 @@ def _M(*args, **kwargs):
 
 
 def ERROR(host, reason=None):
-    return Message(u("ERROR"), u(":Closing link: {0} ({1})".format(host, reason or u(""))))
+    return Message(u("ERROR"), u(":Closing link: {} ({})".format(host, reason or u(""))))
 
 
 def JOIN(name, prefix=None):
@@ -91,7 +91,7 @@ def RPL_LUSERCHANNELS(nchannels):
 
 
 def RPL_LUSERME(nclients, nservers):
-    return _M(u("255"), u("I have {0} clients and {1} servers".format(nclients, nservers)))
+    return _M(u("255"), u("I have {} clients and {} servers".format(nclients, nservers)))
 
 
 def RPL_AWAY(nick, message):
@@ -135,7 +135,7 @@ def RPL_ENDOFWHOIS(nick):
 
 
 def RPL_WHOISCHANNELS(nick, channels):
-    return _M(u("319"), nick, u(":{0}".format(u(" ").join(channels))))
+    return _M(u("319"), nick, u(":{}".format(u(" ").join(channels))))
 
 
 def RPL_LISTSTART(header=None):
@@ -165,7 +165,7 @@ def RPL_TOPIC(channel, topic):
 
 
 def RPL_TOPICWHO(channel, setter, timestamp):
-    return _M(u("333"), channel, setter, u("{0}".format(timestamp)))
+    return _M(u("333"), channel, setter, u("{}".format(timestamp)))
 
 
 def RPL_INVITING(channel, nick):

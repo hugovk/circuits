@@ -49,7 +49,7 @@ class WebSocketClient(BaseComponent):
         :param headers: additional headers to be passed with the
             WebSocket setup HTTP request
         """
-        super(WebSocketClient, self).__init__(channel=channel)
+        super().__init__(channel=channel)
 
         self._url = url
         self._headers = headers or {}
@@ -98,8 +98,8 @@ class WebSocketClient(BaseComponent):
         headers["Sec-WebSocket-Version"] = "13"
         UNSAFE_CHARS = re.compile('[^0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~]')
         escaped_resource = UNSAFE_CHARS.sub('', self._resource.encode('ASCII', 'replace').decode('ASCII'))
-        command = "GET %s HTTP/1.1" % (escaped_resource,)
-        message = "%s\r\n%s" % (command, headers)
+        command = "GET {} HTTP/1.1".format(escaped_resource)
+        message = "{}\r\n{}".format(command, headers)
         self._pending += 1
         self.fire(write(message.encode('utf-8')), self._transport)
         return True

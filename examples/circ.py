@@ -32,7 +32,7 @@ from circuits.tools import getargspec
 USAGE = "%prog [options] host [port]"
 VERSION = "%prog v" + systemVersion
 
-MAIN_TITLE = "cIRC - {0:s}".format(systemVersion)
+MAIN_TITLE = "cIRC - {:s}".format(systemVersion)
 
 HELP_STRINGS = {
     "main": "For help, type: /help"
@@ -141,7 +141,7 @@ class Client(Component):
 
         nick = self.nick
         hostname = self.hostname
-        name = "%s on %s using circuits/%s" % (nick, hostname, systemVersion)
+        name = "{} on {} using circuits/{}".format(nick, hostname, systemVersion)
 
         self.fire(NICK(nick))
         self.fire(USER(nick, hostname, host, name))
@@ -154,7 +154,7 @@ class Client(Component):
         """
 
         if numeric == ERR_NICKNAMEINUSE:
-            self.fire(NICK("{0:s}_".format(args[0])))
+            self.fire(NICK("{:s}_".format(args[0])))
         elif numeric in (RPL_ENDOFMOTD, ERR_NOMOTD):
             self.fire(JOIN(self.ircchannel))
 
@@ -191,7 +191,7 @@ class Client(Component):
 
     def syntaxError(self, command, args, expected):
         self.lines.append(
-            Text("Syntax error ({0:s}): {1:s} Expected: {2:s}".format(
+            Text("Syntax error ({:s}): {:s} Expected: {:s}".format(
                 command, args, expected)
             )
         )
@@ -250,7 +250,7 @@ class Client(Component):
                             )
         else:
             if self.ircchannel is not None:
-                self.lines.append(Text("<%s> %s" % (self.nick, s)))
+                self.lines.append(Text("<{}> {}".format(self.nick, s)))
                 self.fire(PRIVMSG(self.ircchannel, s))
             else:
                 self.lines.append(Text(
@@ -294,9 +294,9 @@ class Client(Component):
         nick, ident, host = source
 
         if event.name == "notice":
-            self.lines.append(Text("-%s- %s" % (nick, message)))
+            self.lines.append(Text("-{}- {}".format(nick, message)))
         else:
-            self.lines.append(Text("<%s> %s" % (nick, message)))
+            self.lines.append(Text("<{}> {}".format(nick, message)))
 
 
 def main():

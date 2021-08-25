@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -
 #
 # This file is part of http-parser released under the MIT license.
 # See the NOTICE for more information.
@@ -39,7 +38,7 @@ class InvalidChunkSize(Exception):
     """ error raised when we parse an invalid chunk size """
 
 
-class HttpParser(object):
+class HttpParser:
 
     def __init__(self, kind=2, decompress=False):
         self.kind = kind
@@ -259,7 +258,7 @@ class HttpParser(object):
         # status
         matchs = STATUS_RE.match(bits[1])
         if matchs is None:
-            raise InvalidRequestLine("Invalid status: {0:s}".format(bits[1]))
+            raise InvalidRequestLine("Invalid status: {:s}".format(bits[1]))
 
         self._status = bits[1]
         self._status_code = int(matchs.group(1))

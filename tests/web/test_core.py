@@ -13,10 +13,10 @@ class Root(Controller):
         return "Hello World!"
 
     def test_args(self, *args, **kwargs):
-        return "{0}\n{1}".format(repr(args), repr(kwargs))
+        return "{}\n{}".format(repr(args), repr(kwargs))
 
     def test_default_args(self, a=None, b=None):
-        return "a={0}\nb={1}".format(a, b)
+        return "a={}\nb={}".format(a, b)
 
     def test_redirect(self):
         return self.redirect("/")
@@ -50,7 +50,7 @@ def test_404(webapp):
 def test_args(webapp):
     args = ("1", "2", "3")
     kwargs = {"1": "one", "2": "two", "3": "three"}
-    url = "%s/test_args/%s" % (webapp.server.http.base, "/".join(args))
+    url = "{}/test_args/{}".format(webapp.server.http.base, "/".join(args))
     data = urlencode(kwargs).encode('utf-8')
     f = urlopen(url, data)
     data = f.read().split(b"\n")
@@ -65,7 +65,7 @@ def test_args(webapp):
 ])
 def test_default_args(webapp, data, expected):
     args, kwargs = data
-    url = u("{0:s}/test_default_args/{1:s}".format(
+    url = u("{:s}/test_default_args/{:s}".format(
         webapp.server.http.base,
         u("/").join(args)
     ))

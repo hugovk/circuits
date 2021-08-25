@@ -81,7 +81,7 @@ def parse_qs(query_string, keep_blank_values=True):
         return {"x": int(pm[0]), "y": int(pm[1])}
     else:
         pm = _parse_qs(query_string, keep_blank_values)
-        return dict((k, v[0]) for k, v in pm.items() if v)
+        return {k: v[0] for k, v in pm.items() if v}
 
 
 def dictform(form):
@@ -154,7 +154,7 @@ def get_ranges(headervalue, content_length):
     result = []
     bytesunit, byteranges = headervalue.split("=", 1)
     for brange in byteranges.split(","):
-        start, stop = [x.strip() for x in brange.split("-", 1)]
+        start, stop = (x.strip() for x in brange.split("-", 1))
         if start:
             if not stop:
                 stop = content_length - 1

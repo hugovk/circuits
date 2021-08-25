@@ -17,10 +17,10 @@ class FileWatcher(Component):
     channel = "notify"
 
     def opened(self, filename, path, fullpath, isdir):
-        print("File {0:s} opened".format(filename))
+        print("File {:s} opened".format(filename))
 
     def closed(self, filename, path, fullpath, isdir):
-        print("File {0:s} closed".format(filename))
+        print("File {:s} closed".format(filename))
 
 
 # Configure the system

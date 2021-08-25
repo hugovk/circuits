@@ -15,7 +15,7 @@ from .handlers import handler
 class FallBackGenerator(BaseComponent):
 
     def __init__(self, *args, **kwargs):
-        super(FallBackGenerator, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._continue = Event()
 
     @handler("generate_events", priority=-100)
@@ -86,7 +86,7 @@ class FallBackExceptionHandler(BaseComponent):
         else:
             handler = reprhandler(handler)
 
-        msg = "ERROR {0:s} ({1:s}) ({2:s}): {3:s}\n".format(
+        msg = "ERROR {:s} ({:s}) ({:s}): {:s}\n".format(
             handler, repr(fevent), repr(error_type), repr(value)
         )
 

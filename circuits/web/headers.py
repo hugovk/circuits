@@ -21,9 +21,9 @@ def _formatparam(param, value=None, quote=1):
     if value is not None and len(value) > 0:
         if quote or tspecials.search(value):
             value = value.replace('\\', '\\\\').replace('"', r'\"')
-            return '%s="%s"' % (param, value)
+            return '{}="{}"'.format(param, value)
         else:
-            return '%s=%s' % (param, value)
+            return '{}={}'.format(param, value)
     else:
         return param
 
@@ -49,7 +49,7 @@ def header_elements(fieldname, fieldvalue):
     return list(reversed(sorted(result)))
 
 
-class HeaderElement(object):
+class HeaderElement:
 
     """An element (with parameters) from an HTTP header's element list."""
 
@@ -66,8 +66,8 @@ class HeaderElement(object):
         return self.value < other.value
 
     def __str__(self):
-        p = [";%s=%s" % (k, v) for k, v in iteritems(self.params)]
-        return "%s%s" % (self.value, "".join(p))
+        p = [";{}={}".format(k, v) for k, v in iteritems(self.params)]
+        return "{}{}".format(self.value, "".join(p))
 
     def __bytes__(self):
         return b(self.__str__())
@@ -236,11 +236,11 @@ class Headers(CaseInsensitiveDict):
         return "Headers(%s)" % repr(list(self.items()))
 
     def __str__(self):
-        headers = ["%s: %s\r\n" % (k, v) for k, v in self.items()]
+        headers = ["{}: {}\r\n".format(k, v) for k, v in self.items()]
         return "".join(headers) + '\r\n'
 
     def items(self):
-        for k, v in super(Headers, self).items():
+        for k, v in super().items():
             if isinstance(v, list):
                 for vv in v:
                     yield (str(k), str(vv))

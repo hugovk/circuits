@@ -17,7 +17,7 @@ class hello(Event):
 class App(Component):
 
     def hello(self):
-        return "Hello from {0:d}".format(getpid())
+        return "Hello from {:d}".format(getpid())
 
 
 def test(manager, watcher):
@@ -29,7 +29,7 @@ def test(manager, watcher):
 
     assert pytest.wait_for(x, "result")
 
-    assert x.value == "Hello from {0:d}".format(app.pid)
+    assert x.value == "Hello from {:d}".format(app.pid)
 
     app.stop()
     app.join()

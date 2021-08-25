@@ -8,10 +8,10 @@ from inspect import getmembers, getmodule, isfunction
 from creoleparser import parse_args
 
 
-class Macro(object):
+class Macro:
 
     def __init__(self, name, arg_string, body, isblock):
-        super(Macro, self).__init__()
+        super().__init__()
 
         self.name = name
         self.arg_string = arg_string
@@ -26,7 +26,7 @@ def dispatcher(name, arg_string, body, isblock, environ):
         try:
             return environ["macros"][name](macro, environ, *args, **kwargs)
         except Exception as e:
-            return "ERROR: Error while executing macro %r (%s)" % (name, e)
+            return "ERROR: Error while executing macro {!r} ({})".format(name, e)
     else:
         return "Macro not found!"
 
@@ -43,7 +43,7 @@ def loadMacros():
     for module in modules:
         name, _ = os.path.splitext(module)
 
-        moduleName = "%s.%s" % (__package__, name)
+        moduleName = "{}.{}".format(__package__, name)
         m = __import__(moduleName, globals(), locals(), __package__)
 
         def p(x):

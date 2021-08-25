@@ -32,7 +32,7 @@ class Debugger(BaseComponent):
                  prefix=None, trim=None, **kwargs):
         "initializes x; see x.__class__.__doc__ for signature"
 
-        super(Debugger, self).__init__()
+        super().__init__()
 
         self._errors = errors
         self._events = events
@@ -70,7 +70,7 @@ class Debugger(BaseComponent):
         else:
             handler = reprhandler(handler)
 
-        msg = "ERROR {0:s} ({1:s}) ({2:s}): {3:s}\n".format(
+        msg = "ERROR {:s} ({:s}) ({:s}): {:s}\n".format(
             handler, repr(fevent), repr(error_type), repr(value)
         )
 
@@ -86,7 +86,7 @@ class Debugger(BaseComponent):
             try:
                 self.file.write("".join(s))
                 self.file.flush()
-            except IOError:
+            except OSError:
                 pass
 
     @handler(priority=101.0)
@@ -114,9 +114,9 @@ class Debugger(BaseComponent):
 
             if self.prefix:
                 if hasattr(self.prefix, '__call__'):
-                    s = "%s: %s" % (self.prefix(), s)
+                    s = "{}: {}".format(self.prefix(), s)
                 else:
-                    s = "%s: %s" % (self.prefix, s)
+                    s = "{}: {}".format(self.prefix, s)
 
             if self.trim:
                 s = "%s ...>" % s[:self.trim]

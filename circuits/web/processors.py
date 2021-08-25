@@ -25,7 +25,7 @@ def process_multipart(request, params):
         ib = ctype.params["boundary"].strip("\"")
 
     if not re.match("^[ -~]{0,200}[!-~]$", ib):
-        raise ValueError("Invalid boundary in multipart form: %r" % (ib,))
+        raise ValueError("Invalid boundary in multipart form: {!r}".format(ib))
 
     parser = MultipartParser(request.body, ib)
     for part in parser:
@@ -51,7 +51,7 @@ def _decode_value(value, encoding):
     elif isinstance(value, list):
         value = [_decode_value(val, encoding) for val in value]
     elif isinstance(value, dict):
-        value = dict((key.decode(encoding), _decode_value(val, encoding)) for key, val in value.iteritems())
+        value = {key.decode(encoding): _decode_value(val, encoding) for key, val in value.iteritems()}
     return value
 
 

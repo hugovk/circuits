@@ -59,7 +59,7 @@ def parse_args():
     return parser.parse_args()
 
 
-class Channel(object):
+class Channel:
 
     def __init__(self, name):
         self.name = name
@@ -69,7 +69,7 @@ class Channel(object):
         self.users = []
 
 
-class User(object):
+class User:
 
     def __init__(self, sock, host, port):
         self.sock = sock
@@ -90,7 +90,7 @@ class User(object):
         return joinprefix(self.nick, userinfo.user, userinfo.host)
 
 
-class UserInfo(object):
+class UserInfo:
 
     def __init__(self, user=None, host=None, name=None):
         self.user = user
@@ -104,7 +104,7 @@ class Server(Component):
 
     network = "Test"
     host = "localhost"
-    version = "ircd v{0:s}".format(__version__)
+    version = "ircd v{:s}".format(__version__)
 
     def init(self, args, logger=None):
         self.args = args
@@ -148,7 +148,7 @@ class Server(Component):
         host, port = user.host, user.port
 
         self.logger.info(
-            "I: [{0:s}:{1:d}] {2:s}".format(host, port, repr(data))
+            "I: [{:s}:{:d}] {:s}".format(host, port, repr(data))
         )
 
     def write(self, sock, data):
@@ -156,20 +156,20 @@ class Server(Component):
         host, port = user.host, user.port
 
         self.logger.info(
-            "O: [{0:s}:{1:d}] {2:s}".format(host, port, repr(data))
+            "O: [{:s}:{:d}] {:s}".format(host, port, repr(data))
         )
 
     def ready(self, server, bind):
         stderr.write(
-            "ircd v{0:s} ready! Listening on: {1:s}\n".format(
-                __version__, "{0:s}:{1:d}".format(*bind)
+            "ircd v{:s} ready! Listening on: {:s}\n".format(
+                __version__, "{:s}:{:d}".format(*bind)
             )
         )
 
     def connect(self, sock, host, port):
         self.users[sock] = User(sock, host, port)
 
-        self.logger.info("C: [{0:s}:{1:d}]".format(host, port))
+        self.logger.info("C: [{:s}:{:d}]".format(host, port))
 
     def disconnect(self, sock):
         if sock not in self.users:
@@ -177,7 +177,7 @@ class Server(Component):
 
         user = self.users[sock]
 
-        self.logger.info("D: [{0:s}:{1:d}]".format(user.host, user.port))
+        self.logger.info("D: [{:s}:{:d}]".format(user.host, user.port))
 
         nick = user.nick
         user, host = user.userinfo.user, user.userinfo.host

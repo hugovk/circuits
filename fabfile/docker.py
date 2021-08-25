@@ -23,7 +23,7 @@ def build(**options):
     rebuild = tobool(options.get("rebuild", False))
     version = options.get("version", "latest")
 
-    tag = "{0:s}:{1:s}".format(TAG, version)
+    tag = "{:s}:{:s}".format(TAG, version)
     args = ["docker", "build", "-t", tag, "."]
 
     if rebuild:
